@@ -11,4 +11,5 @@ type UserUseCase interface {
 	Login(models.UserLogin) (models.UserLoginResponse, error)
 	ValidateEMail(email string) (bool, error)
 	IsValidPhoneNumber(phoneNumber string) bool
+	UpdatePassword(email string, newpassword string, id int64) (bool, error)
 }

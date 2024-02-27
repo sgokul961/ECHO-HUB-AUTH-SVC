@@ -33,6 +33,7 @@ func AddImagesToS3Bucket(image *multipart.FileHeader) (string, error) {
 		ACL:    "public-read",
 	})
 	if err1 != nil {
+		
 		return "", err1
 	}
 	return upload.Location, nil

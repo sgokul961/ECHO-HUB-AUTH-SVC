@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/sgokul961/echo-hub-auth-svc/pkg/domain"
 	"github.com/sgokul961/echo-hub-auth-svc/pkg/models"
@@ -72,10 +73,6 @@ func (u *UserHandler) Login(ctx context.Context, user *pb.LoginRequest) (*pb.Log
 
 func (a *UserHandler) AdminSignup(ctx context.Context, admin *pb.AdminSignupRequest) (*pb.AdminSignupResponse, error) {
 
-	// if a.ad == nil {
-	// 	return nil, errors.New("user use case is not initialized")
-	// }
-
 	domainAdmin := models.AdminSignupRequest{
 		Email:          admin.Email,
 		Password:       admin.Password,
@@ -104,5 +101,17 @@ func (a *UserHandler) AdminLogin(ctx context.Context, admin *pb.AdminLoginReques
 	return &pb.AdminLoginResponse{
 		AccessToken:  adminDetails.AccessToken,
 		RefreshToken: adminDetails.RefreshToken,
+	}, nil
+}
+func (a *UserHandler) ResetPassword(ctx context.Context, r *pb.ResetPasswordRequest) (*pb.ResetPasswordResponse, error) {
+	fmt.Println("handler pass and email", r.Email, r.Password)
+	_, err := a.usecase.UpdatePassword(r.Email, r.Password, r.Id)
+
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("pb res", r.Email, r.Password)
+	return &pb.ResetPasswordResponse{
+		Status: http.StatusOK,
 	}, nil
 }

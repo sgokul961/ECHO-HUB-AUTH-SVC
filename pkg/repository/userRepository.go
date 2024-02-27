@@ -98,3 +98,21 @@ func (u *userDatabase) IsAdminOrNot(email string) (bool, error) {
 	return isAdmin, err
 
 }
+func (u *userDatabase) UpdatePassword(email string, newpassword string, id int64) (bool, error) {
+	fmt.Println("email and password", email, newpassword)
+	query := `UPDATE users SET password = ? WHERE id = ? AND email = ?`
+
+	err := u.DB.Exec(query, newpassword, id, email).Error
+	fmt.Println("repo", newpassword, email)
+
+	if err != nil {
+		return false, errors.New("password  error")
+	}
+	return true, nil
+}
+func (u *userDatabase) FindUserById(id int64) bool {
+	query := `SELECT 	* FROM users WHERE id = ?`
+	err := u.DB.Raw(query, id)
+
+	return err == nil
+}

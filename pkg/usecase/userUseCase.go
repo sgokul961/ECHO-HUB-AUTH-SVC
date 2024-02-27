@@ -11,6 +11,7 @@ import (
 	interfaces "github.com/sgokul961/echo-hub-auth-svc/pkg/repository/interface"
 	interfacesU "github.com/sgokul961/echo-hub-auth-svc/pkg/usecase/interface"
 	"github.com/sgokul961/echo-hub-auth-svc/pkg/utils"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type userUseCase struct {
@@ -89,14 +90,26 @@ func (u *userUseCase) Login(user models.UserLogin) (models.UserLoginResponse, er
 		return models.UserLoginResponse{}, err
 	}
 	fmt.Println("user passw", password)
+	fmt.Println("enterd password", user.Password)
 
 	//varifiying the hashed password from db with the  entered password
 
-	verifypassword := utils.CheckPasswordHash(user.Password, password)
-	if !verifypassword {
+	//verifypassword := utils.CheckPasswordHash(user.Password, password)
+	err = bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
+	if err != nil {
 		return models.UserLoginResponse{}, errors.New("password mismatch")
 	}
-	fmt.Println("var pass", verifypassword)
+	fmt.Println("password is ", user.Password, password)
+
+	// fmt.Println("equal or not equal password", verifypassword)
+	// if !verifypassword {
+	// 	return models.UserLoginResponse{}, errors.New("password mismatch")
+	// }
+	if err != nil {
+		return models.UserLoginResponse{}, err
+	}
+
+	//fmt.Println("var pass", verifypassword)
 
 	//fetching  id with the email associated with it
 	id, err := u.repo.FindUserByMail(user.Email)
@@ -148,4 +161,36 @@ func (u *userUseCase) IsValidPhoneNumber(phoneNumber string) bool {
 	regex := `^[0-9]{10}$`
 	match, _ := regexp.MatchString(regex, phoneNumber)
 	return match
+}
+func (u *userUseCase) UpdatePassword(email string, newpassword string, id int64) (bool, error) {
+
+	user, err := u.repo.IsUserExist(email)
+	if err != nil {
+		return false, err
+	}
+	if !user {
+		return false, errors.New("user doesn't exist")
+
+	}
+
+	userid, err := u.repo.FindUserByMail(email)
+	fmt.Println("user id ", id)
+	if err != nil {
+		return false, err
+	}
+	if userid != id {
+
+		return false, errors.New("user ID doesn't match the email provided")
+
+	}
+
+	hash := utils.HashPassword(newpassword)
+	fmt.Println("usecase emailand password", email, newpassword)
+	passwordUpdate, err := u.repo.UpdatePassword(email, hash, id)
+
+	if err != nil {
+		return false, err
+	}
+	return passwordUpdate, nil
+
 }
