@@ -94,17 +94,12 @@ func (u *userUseCase) Login(user models.UserLogin) (models.UserLoginResponse, er
 
 	//varifiying the hashed password from db with the  entered password
 
-	//verifypassword := utils.CheckPasswordHash(user.Password, password)
 	err = bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
 	if err != nil {
 		return models.UserLoginResponse{}, errors.New("password mismatch")
 	}
 	fmt.Println("password is ", user.Password, password)
 
-	// fmt.Println("equal or not equal password", verifypassword)
-	// if !verifypassword {
-	// 	return models.UserLoginResponse{}, errors.New("password mismatch")
-	// }
 	if err != nil {
 		return models.UserLoginResponse{}, err
 	}
@@ -163,7 +158,7 @@ func (u *userUseCase) IsValidPhoneNumber(phoneNumber string) bool {
 	return match
 }
 func (u *userUseCase) UpdatePassword(email string, newpassword string, id int64) (bool, error) {
-
+	//checking if the user exist in the incoming email
 	user, err := u.repo.IsUserExist(email)
 	if err != nil {
 		return false, err
@@ -172,18 +167,20 @@ func (u *userUseCase) UpdatePassword(email string, newpassword string, id int64)
 		return false, errors.New("user doesn't exist")
 
 	}
-
+	//getting the email id with the incoming email
 	userid, err := u.repo.FindUserByMail(email)
 	fmt.Println("user id ", id)
 	if err != nil {
 		return false, err
 	}
+
+	//if the user id is not same as the id inthe context it willbe returned .
 	if userid != id {
 
 		return false, errors.New("user ID doesn't match the email provided")
 
 	}
-
+	//hash the new password
 	hash := utils.HashPassword(newpassword)
 	fmt.Println("usecase emailand password", email, newpassword)
 	passwordUpdate, err := u.repo.UpdatePassword(email, hash, id)
