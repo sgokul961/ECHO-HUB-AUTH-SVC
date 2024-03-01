@@ -110,9 +110,42 @@ func (u *userDatabase) UpdatePassword(email string, newpassword string, id int64
 	}
 	return true, nil
 }
-func (u *userDatabase) FindUserById(id int64) bool {
-	query := `SELECT 	* FROM users WHERE id = ?`
-	err := u.DB.Raw(query, id)
 
-	return err == nil
+func (u *userDatabase) BlockUserWithId(email string) (bool, error) {
+
+	query := `UPDATE  users SET is_block=true WHERE email=? `
+
+	err := u.DB.Exec(query, email)
+
+	if err != nil {
+		return false, errors.New("cant update this user to blocked ")
+	}
+
+	return true, nil
+
+}
+
+func (u *userDatabase) IsUserExistWithId(id int64) (bool, error) {
+	var count int
+	query := `SELECT COUNT(*) FROM USERS WHERE id=$1 AND is_block=false`
+	err := u.DB.Raw(query, id).Scan(&count).Error
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
+
+}
+func (u *userDatabase) CheckIfUserBlocked(id int64) (bool, error) {
+
+	var isBlocked bool
+
+	query := `SELECT is_block FROM users  WHERE id=? `
+
+	err := u.DB.Raw(query, id).Scan(&isBlocked)
+
+	if err != nil {
+		return false, errors.New(" error in databse ")
+	}
+
+	return isBlocked, nil
 }

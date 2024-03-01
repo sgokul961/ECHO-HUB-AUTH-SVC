@@ -12,4 +12,5 @@ type UserUseCase interface {
 	ValidateEMail(email string) (bool, error)
 	IsValidPhoneNumber(phoneNumber string) bool
 	UpdatePassword(email string, newpassword string, id int64) (bool, error)
+	CheckUserBlocked(id int64) (bool, error)
 }

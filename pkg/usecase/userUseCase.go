@@ -39,11 +39,11 @@ func (u *userUseCase) Register(user domain.User) (int64, error) {
 	}
 	validNum := u.IsValidPhoneNumber(user.Phonenum)
 
-	if err != nil {
-		return 0, err
-	}
+	// if err != nil {
+	// 	return 0, err
+	// }
 	if !validNum {
-		return 1, errors.New("phone number is not valid")
+		return 0, errors.New("phone number is not valid")
 	}
 	userexist, err := u.repo.IsUserExist(user.Email)
 
@@ -54,9 +54,10 @@ func (u *userUseCase) Register(user domain.User) (int64, error) {
 		return 0, errors.New("user already exist")
 	}
 	hashpassword := utils.HashPassword(user.Password)
-	if err != nil {
-		return 0, err
+	if hashpassword == "" {
+		return 0, errors.New("failed to hash password")
 	}
+
 	user.Password = hashpassword
 
 	//user.Role = "user"
@@ -100,9 +101,9 @@ func (u *userUseCase) Login(user models.UserLogin) (models.UserLoginResponse, er
 	}
 	fmt.Println("password is ", user.Password, password)
 
-	if err != nil {
-		return models.UserLoginResponse{}, err
-	}
+	// if err != nil {
+	// 	return models.UserLoginResponse{}, err
+	// }
 
 	//fmt.Println("var pass", verifypassword)
 
@@ -189,5 +190,16 @@ func (u *userUseCase) UpdatePassword(email string, newpassword string, id int64)
 		return false, err
 	}
 	return passwordUpdate, nil
+
+}
+func (u *userUseCase) CheckUserBlocked(id int64) (bool, error) {
+
+	Id_Is, err := u.repo.IsUserExistWithId(id)
+
+	if err != nil {
+		return false, errors.New("databse error ")
+	}
+
+	return Id_Is, nil
 
 }

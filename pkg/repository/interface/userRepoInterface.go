@@ -12,5 +12,7 @@ type UserRepo interface {
 	GetEmail(id int64) (string, error)
 	IsAdminOrNot(email string) (bool, error)
 	UpdatePassword(email string, newpassword string, id int64) (bool, error)
-	FindUserById(id int64) bool
+	BlockUserWithId(email string) (bool, error)
+	CheckIfUserBlocked(id int64) (bool, error)
+	IsUserExistWithId(id int64) (bool, error)
 }

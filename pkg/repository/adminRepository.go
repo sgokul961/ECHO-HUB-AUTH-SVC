@@ -53,9 +53,9 @@ func (u *adminDatabase) AdminSignup(admin models.AdminSignupRequest) (int64, err
 	if err != nil {
 		return 1, err
 	}
-	if err != nil {
-		return 0, fmt.Errorf("failed to insert user: %v", err)
-	}
+	// if err != nil {
+	// 	return 0, fmt.Errorf("failed to insert user: %v", err)
+	// }
 	return id, nil
 
 }

@@ -43,8 +43,8 @@ func (u *adminRepo) AdminSignup(admins models.AdminSignupRequest) (int64, error)
 		return 0, errors.New("cant register ")
 	}
 	hashpassword := utils.HashPassword(admins.Password)
-	if err != nil {
-		return 0, err
+	if hashpassword == "" {
+		return 0, errors.New("failed to hash password")
 	}
 	admins.Password = hashpassword
 	admins.Is_Admin = true
