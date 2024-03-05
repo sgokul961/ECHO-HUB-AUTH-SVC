@@ -107,3 +107,22 @@ func (a *adminRepo) AdminLogin(admin models.AdminLogin) (models.AdminLoginRespos
 	}, nil
 
 }
+func (u *adminRepo) BlockUser(user_id int64) error {
+
+	blocked, err := u.AdminRepo.CheckBlockStatus(user_id)
+	if err != nil {
+		return err
+	}
+
+	if blocked {
+		return errors.New("user is already blocked")
+	}
+
+	err = u.AdminRepo.BlockUser(user_id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}

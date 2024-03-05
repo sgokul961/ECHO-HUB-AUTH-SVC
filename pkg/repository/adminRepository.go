@@ -114,3 +114,25 @@ func (u *adminDatabase) IsAdminOrNot(email string) (bool, error) {
 	isAdmin := count > 0
 	return isAdmin, nil
 }
+func (u *adminDatabase) BlockUser(user_id int64) error {
+
+	query := `UPDATE users SET is_block = true WHERE id = ?`
+
+	err := u.DB.Exec(query, user_id).Error
+	if err != nil {
+		return errors.New("cannot update this user to blocked: " + err.Error())
+	}
+	return nil
+}
+func (u *adminDatabase) CheckBlockStatus(user_id int64) (bool, error) {
+
+	query := `SELECT is_block FROM users WHERE id=?`
+	var userStatus bool
+	err := u.DB.Raw(query, user_id).Scan(&userStatus).Error
+
+	if err != nil {
+		return false, err
+	}
+	return userStatus, nil
+
+}

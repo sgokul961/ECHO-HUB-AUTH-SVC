@@ -12,4 +12,6 @@ type AdminRepo interface {
 	FindAdminByMail(email string) (int64, error)
 	GetEmail(id int64) (string, error)
 	IsAdminOrNot(email string) (bool, error)
+	BlockUser(user_id int64) error
+	CheckBlockStatus(user_id int64) (bool, error)
 }
