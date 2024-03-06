@@ -193,14 +193,22 @@ func (u *userUseCase) UpdatePassword(email string, newpassword string, id int64)
 
 }
 func (u *userUseCase) CheckUserBlocked(id int64) (bool, error) {
-
-	Id_Is, err := u.repo.IsUserExistWithId(id)
+	exsist, err := u.repo.IsUserExistWIthId(id)
 
 	if err != nil {
-		return false, errors.New("databse error ")
+		return false, err
+	}
+	if !exsist {
+		return false, errors.New("user id invalid")
 	}
 
-	return Id_Is, nil
+	isBlocked, err := u.repo.CheckIfUserBlocked(id)
 
+	// Print status based on isBlocked
+	fmt.Println("isblock", isBlocked)
+	if err != nil {
+		return false, err // Pass the actual error returned by the repository
+	}
+
+	return isBlocked, nil
 }
-	

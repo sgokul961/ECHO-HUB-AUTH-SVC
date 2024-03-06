@@ -116,13 +116,13 @@ func (a *UserHandler) ResetPassword(ctx context.Context, r *pb.ResetPasswordRequ
 	}, nil
 }
 func (a *UserHandler) CheckUserBlocked(ctx context.Context, r *pb.CheckUserBlockedRequest) (*pb.CheckUserBlockedResponse, error) {
-	_, err := a.usecase.CheckUserBlocked(r.Id)
+	is_block, err := a.usecase.CheckUserBlocked(r.Id)
 
 	if err != nil {
 		return nil, err
 	}
 	return &pb.CheckUserBlockedResponse{
-		Status: http.StatusOK,
+		Status: is_block,
 		Userid: r.Id,
 	}, nil
 }

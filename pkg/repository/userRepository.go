@@ -139,13 +139,25 @@ func (u *userDatabase) CheckIfUserBlocked(id int64) (bool, error) {
 
 	var isBlocked bool
 
-	query := `SELECT is_block FROM users  WHERE id=? `
+	query := `SELECT is_block FROM users  WHERE id = ? `
 
-	err := u.DB.Raw(query, id).Scan(&isBlocked)
+	err := u.DB.Raw(query, id).Scan(&isBlocked).Error
 
 	if err != nil {
 		return false, errors.New(" error in databse ")
 	}
 
 	return isBlocked, nil
+}
+func (u *userDatabase) IsUserExistWIthId(id int64) (bool, error) {
+	var count int
+
+	query := `SELECT COUNT(*) FROM USERS WHERE id=$1 `
+
+	err := u.DB.Raw(query, id).Scan(&count).Error
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
+
 }

@@ -15,4 +15,5 @@ type UserRepo interface {
 	BlockUserWithId(email string) (bool, error)
 	CheckIfUserBlocked(id int64) (bool, error)
 	IsUserExistWithId(id int64) (bool, error)
+	IsUserExistWIthId(id int64) (bool, error)
 }
