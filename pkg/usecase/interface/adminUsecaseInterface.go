@@ -6,4 +6,5 @@ type AdminUseCase interface {
 	AdminSignup(admin models.AdminSignupRequest) (int64, error)
 	AdminLogin(admin models.AdminLogin) (models.AdminLoginResposne, error)
 	BlockUser(user_id int64) error
+	UnblockUser(user_id int64) error
 }

@@ -138,3 +138,15 @@ func (a *UserHandler) BlockUser(ctx context.Context, r *pb.BlockUserRequest) (*p
 	}, nil
 
 }
+func (a *UserHandler) UnblockUser(ctx context.Context, r *pb.UnblockUserRequest) (*pb.UnblockUserResponse, error) {
+
+	err := a.adminusecase.UnblockUser(r.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UnblockUserResponse{
+		Status: http.StatusOK,
+		Userid: r.Id,
+	}, nil
+
+}

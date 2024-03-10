@@ -126,3 +126,22 @@ func (u *adminRepo) BlockUser(user_id int64) error {
 	return nil
 
 }
+func (u *adminRepo) UnblockUser(user_id int64) error {
+
+	block, err := u.AdminRepo.CheckBlockStatus(user_id)
+
+	if err != nil {
+		return err
+	}
+
+	if !block {
+		return errors.New("user is already unblocked")
+	}
+	err = u.AdminRepo.UnblockUser(user_id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}

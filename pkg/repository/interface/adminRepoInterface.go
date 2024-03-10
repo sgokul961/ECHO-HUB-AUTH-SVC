@@ -14,4 +14,5 @@ type AdminRepo interface {
 	IsAdminOrNot(email string) (bool, error)
 	BlockUser(user_id int64) error
 	CheckBlockStatus(user_id int64) (bool, error)
+	UnblockUser(user_id int64) error
 }

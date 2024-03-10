@@ -136,3 +136,13 @@ func (u *adminDatabase) CheckBlockStatus(user_id int64) (bool, error) {
 	return userStatus, nil
 
 }
+
+func (u *adminDatabase) UnblockUser(user_id int64) error {
+	query := `UPDATE users SET is_block=false WHERE id = ?`
+	err := u.DB.Exec(query, user_id).Error
+	if err != nil {
+		return errors.New("user is not blocked : " + err.Error())
+	}
+	return nil
+
+}
