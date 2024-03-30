@@ -212,3 +212,12 @@ func (u *userUseCase) CheckUserBlocked(id int64) (bool, error) {
 
 	return isBlocked, nil
 }
+
+func (u *userUseCase) FetchDetails(id int64) (models.UserShortDetail, error) {
+	fetchedUser, err := u.repo.FetchDetails(id)
+	if err != nil {
+		return models.UserShortDetail{}, err
+	}
+
+	return fetchedUser, nil
+}

@@ -150,3 +150,16 @@ func (a *UserHandler) UnblockUser(ctx context.Context, r *pb.UnblockUserRequest)
 	}, nil
 
 }
+func (a *UserHandler) FetchShortDetails(ctx context.Context, r *pb.FetchShortDetailsRequest) (*pb.FetchShortDetailsResponse, error) {
+	user, err := a.usecase.FetchDetails(r.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.FetchShortDetailsResponse{
+		Id:    user.Id,
+		Name:  user.Username,
+		Image: user.ProfilePicture,
+	}, nil
+
+}

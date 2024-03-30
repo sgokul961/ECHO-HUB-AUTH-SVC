@@ -41,3 +41,8 @@ type AdminSignupRequest struct {
 	Is_Admin       bool      `json:"is_admin" gorm:"default:false"`
 	CreatedAt      time.Time `json:"created_at"`
 }
+type UserShortDetail struct {
+	Id             int64  `json:"id"`
+	Username       string `json:"username"`
+	ProfilePicture string `json:"profile_picture"`
+}

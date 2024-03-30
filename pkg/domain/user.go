@@ -17,11 +17,12 @@ type User struct {
 	IsBlock        bool      `json:"is_block" gorm:"default:false"`
 	CreatedAt      time.Time `json:"created_at"`
 }
-type Image struct {
-	ID     int64  `json:"id" gorm:"primaryKey;autoIncrement:true;unique"`
-	UserId int64  `json:"user_id"`
-	User   User   `json:"user" gorm:"foreignKey:UserId"`
-	Image  string `json:"image"`
-}
+
+// type Image struct {
+// 	ID     int64  `json:"id" gorm:"primaryKey;autoIncrement:true;unique"`
+// 	UserId int64  `json:"user_id"`
+// 	User   User   `json:"user" gorm:"foreignKey:UserId"`
+// 	Image  string `json:"image"`
+// }
 
 //gorm:"check:role IN ('admin', 'user')"

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/sgokul961/echo-hub-auth-svc/pkg/domain"
+	"github.com/sgokul961/echo-hub-auth-svc/pkg/models"
 	interfaces "github.com/sgokul961/echo-hub-auth-svc/pkg/repository/interface"
 	"gorm.io/gorm"
 )
@@ -160,4 +161,16 @@ func (u *userDatabase) IsUserExistWIthId(id int64) (bool, error) {
 	}
 	return count > 0, nil
 
+}
+
+func (u *userDatabase) FetchDetails(id int64) (models.UserShortDetail, error) {
+	var userDetails models.UserShortDetail
+
+	query := `SELECT id, username, profile_picture FROM users WHERE id = ?`
+	err := u.DB.Raw(query, id).Scan(&userDetails).Error
+	if err != nil {
+		return models.UserShortDetail{}, err
+	}
+
+	return userDetails, nil
 }

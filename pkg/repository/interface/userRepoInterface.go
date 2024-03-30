@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"github.com/sgokul961/echo-hub-auth-svc/pkg/domain"
+	"github.com/sgokul961/echo-hub-auth-svc/pkg/models"
 )
 
 type UserRepo interface {
@@ -16,4 +17,5 @@ type UserRepo interface {
 	CheckIfUserBlocked(id int64) (bool, error)
 	IsUserExistWithId(id int64) (bool, error)
 	IsUserExistWIthId(id int64) (bool, error)
+	FetchDetails(id int64) (models.UserShortDetail, error)
 }
