@@ -1,18 +1,23 @@
-FROM golang:1.22.0-alpine3.19 as build
+FROM golang:1.21-alpine3.19 AS builder
+
+RUN mkdir /app
 
 WORKDIR /app
+
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY cmd cmd
 COPY pkg pkg
 
-RUN go build -o /api -v ./cmd
-FROM alpine3.19
-COPY --from=build /api /api
+RUN go build -o auth ./cmd
 
+FROM alpine:3.19
 
-EXPOSE 3000
+RUN mkdir /app
+WORKDIR /app
 
+COPY --from=builder /app/auth .
+COPY --from=builder /app/pkg/config/envs/dev.env pkg/config/envs/dev.env
 
-CMD ["/api"]
+CMD ["sh","-c","echo $PORT && ./auth"]
