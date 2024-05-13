@@ -1,4 +1,4 @@
 # Environment file
 
-/pkg/config/envs/dev.env
+./pkg/config/envs/dev.env
 
