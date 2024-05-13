@@ -1,1 +1,4 @@
-echo-hub-auth-svc/pkg/config/envs/dev.env
+# Environment file
+
+/pkg/config/envs/dev.env
+
